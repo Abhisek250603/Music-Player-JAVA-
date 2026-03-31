@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Java Music Player</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #121212;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .player {
+      background: #1e1e1e;
+      border-radius: 16px;
+      padding: 32px;
+      width: 360px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    h1 { font-size: 1.4rem; color: #1db954; margin-bottom: 24px; }
+    #song-name { font-size: 1.1rem; margin-bottom: 6px; }
+    #song-index { font-size: 0.8rem; color: #aaa; margin-bottom: 20px; }
+    audio { width: 100%; margin-bottom: 20px; border-radius: 8px; }
+    .controls { display: flex; justify-content: center; gap: 16px; margin-bottom: 24px; }
+    button {
+      background: #1db954;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 24px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    button:hover { background: #17a349; }
+    .playlist { text-align: left; max-height: 200px; overflow-y: auto; }
+    .playlist-item {
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #ccc;
+      transition: background 0.15s;
+    }
+    .playlist-item:hover { background: #2a2a2a; }
+    .playlist-item.active { background: #1db95422; color: #1db954; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="player">
+    <h1>🎵 Music Player</h1>
+    <div id="song-name">Select a song</div>
+    <div id="song-index"></div>
+    <audio id="audio" controls></audio>
+    <div class="controls">
+      <button onclick="prev()">⏮ Prev</button>
+      <button onclick="next()">Next ⏭</button>
+    </div>
+    <div class="playlist" id="playlist"></div>
+  </div>
+
+  <script>
+    const songs = Array.from({length: 10}, (_, i) => `public/${i + 1}.wav`);
+    let current = 0;
+    const audio = document.getElementById('audio');
+    const playlist = document.getElementById('playlist');
+
+    songs.forEach((src, i) => {
+      const div = document.createElement('div');
+      div.className = 'playlist-item';
+      div.textContent = `Song ${i + 1}`;
+      div.onclick = () => play(i);
+      playlist.appendChild(div);
+    });
+
+    function play(index) {
+      current = index;
+      audio.src = songs[index];
+      audio.play();
+      document.getElementById('song-name').textContent = `Song ${index + 1}`;
+      document.getElementById('song-index').textContent = `${index + 1} / ${songs.length}`;
+      document.querySelectorAll('.playlist-item').forEach((el, i) =>
+        el.classList.toggle('active', i === index));
+    }
+
+    function next() { play((current + 1) % songs.length); }
+    function prev() { play((current - 1 + songs.length) % songs.length); }
+
+    audio.addEventListener('ended', next);
+    play(0);
+  </script>
+</body>
+</html>
