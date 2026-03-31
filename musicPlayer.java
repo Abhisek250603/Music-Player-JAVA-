@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class musicPlayer {
     private static Clip clip;
     private static int currentSongIndex = 0;
-    private static final String MUSIC_FOLDER = System.getProperty("user.dir") + "\\public";
+    private static final String MUSIC_FOLDER = "D:\\Projects\\Java Music Player\\public";
     private static String[] songs = loadSongs();
 
     private static String[] loadSongs() {
